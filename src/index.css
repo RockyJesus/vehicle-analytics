@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 240 10% 95%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -17,22 +17,28 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Fleet Analytics Primary Colors */
-    --primary: 210 100% 40%;
+    /* Deepworks Fleet Analytics Colors - matching the reference */
+    --primary: 210 100% 30%;
     --primary-foreground: 0 0% 100%;
     --primary-light: 210 100% 95%;
-    --primary-dark: 210 100% 25%;
+    --primary-dark: 210 100% 20%;
 
     --secondary: 210 25% 95%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 220 13% 91%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 200 100% 85%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    /* Status Colors */
+    /* Chart Colors - matching reference */
+    --chart-1: 142 76% 36%;  /* Green for current/good performance */
+    --chart-2: 38 92% 50%;   /* Orange/Yellow for previous/warning */
+    --chart-3: 0 84% 60%;    /* Red for poor performance */
+    --chart-4: 210 100% 50%; /* Blue for primary data */
+    --chart-5: 280 65% 60%;  /* Purple for secondary data */
+
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
     --success-light: 142 76% 95%;
@@ -49,7 +55,7 @@ All colors MUST be HSL.
     --input: 214.3 31.8% 91.4%;
     --ring: 210 100% 40%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
 
