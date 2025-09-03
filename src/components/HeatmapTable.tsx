@@ -28,57 +28,46 @@ export const HeatmapTable = ({ title, data }: HeatmapTableProps) => {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-semibold">{title}</CardTitle>
-          <div className="flex items-center space-x-4 text-xs">
-            <span>Vehicle Class</span>
-            <select className="border rounded px-2 py-1 text-xs">
-              <option>Scorpio</option>
-              <option>Bolero</option>
-              <option>Safari</option>
-              <option>Mini Van</option>
-            </select>
-          </div>
-        </div>
+        <CardTitle className="text-sm font-semibold">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto -mx-2">
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b">
-                <th className="text-left p-1 font-medium">Time</th>
-                <th className="text-center p-1 font-medium">Mon</th>
-                <th className="text-center p-1 font-medium">Tue</th>
-                <th className="text-center p-1 font-medium">Wed</th>
-                <th className="text-center p-1 font-medium">Thu</th>
-                <th className="text-center p-1 font-medium">Fri</th>
-                <th className="text-center p-1 font-medium">Sat</th>
-                <th className="text-center p-1 font-medium">Sun</th>
+                <th className="text-left p-1 font-medium min-w-[60px]">Time</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Mon</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Tue</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Wed</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Thu</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Fri</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Sat</th>
+                <th className="text-center p-1 font-medium min-w-[35px]">Sun</th>
               </tr>
             </thead>
             <tbody>
               {data.map((row, index) => (
                 <tr key={index} className="border-b border-border/50">
-                  <td className="p-1 font-medium">{row.time}</td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.mon)}`}>
+                  <td className="p-1 font-medium text-xs">{row.time}</td>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.mon)}`}>
                     {row.mon}
                   </td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.tue)}`}>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.tue)}`}>
                     {row.tue}
                   </td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.wed)}`}>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.wed)}`}>
                     {row.wed}
                   </td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.thu)}`}>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.thu)}`}>
                     {row.thu}
                   </td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.fri)}`}>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.fri)}`}>
                     {row.fri}
                   </td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.sat)}`}>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.sat)}`}>
                     {row.sat}
                   </td>
-                  <td className={`text-center p-1 rounded m-1 ${getHeatmapColor(row.sun)}`}>
+                  <td className={`text-center p-1 rounded m-0.5 text-xs ${getHeatmapColor(row.sun)}`}>
                     {row.sun}
                   </td>
                 </tr>

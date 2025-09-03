@@ -49,13 +49,89 @@ class DataService {
     }
 
     try {
-      const response = await fetch('/fleet-data.json');
-      this.data = await response.json();
-      return this.data!;
+      // Generate mock data since we're in a demo environment
+      this.data = this.generateMockData();
+      return this.data;
     } catch (error) {
       console.error('Failed to load fleet data:', error);
-      throw new Error('Failed to load fleet data');
+      // Fallback to generated data
+      this.data = this.generateMockData();
+      return this.data;
     }
+  }
+
+  private generateMockData(): FleetData {
+    const vehicles: Vehicle[] = Array.from({ length: 150 }, (_, i) => ({
+      id: `VH${String(i + 1).padStart(3, '0')}`,
+      name: `Vehicle ${i + 1}`,
+      type: ['Scorpio', 'Bolero', 'Safari', 'Mini Van'][Math.floor(Math.random() * 4)] as Vehicle['type'],
+      status: ['active', 'idle', 'maintenance'][Math.floor(Math.random() * 3)] as Vehicle['status'],
+      utilization: Math.floor(Math.random() * 40) + 60,
+      location: {
+        lat: 28.6139 + (Math.random() - 0.5) * 0.1,
+        lng: 77.2090 + (Math.random() - 0.5) * 0.1,
+      },
+      fuel: Math.floor(Math.random() * 40) + 60,
+      mileage: Math.floor(Math.random() * 50000) + 20000,
+      lastUpdate: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+      vendor: ['Thriveni Vehicles', 'Chintamani Devi', 'Neha Kumari', 'Suraj Tiwari', 'Sabita Devi', 'Sanjay', 'John'][Math.floor(Math.random() * 7)],
+      shift: ['Shift A', 'Shift B', 'Shift C'][Math.floor(Math.random() * 3)] as Vehicle['shift'],
+      tripCount: Math.floor(Math.random() * 20),
+      idleTime: Math.random() * 10,
+      maintenanceStatus: ['excellent', 'good', 'fair', 'repair'][Math.floor(Math.random() * 4)] as Vehicle['maintenanceStatus'],
+      age: Math.floor(Math.random() * 10) + 1,
+      downtime: Math.random() * 5
+    }));
+
+    return {
+      vehicles,
+      heatmapData: [
+        { time: '12:00 AM', mon: 96, tue: 24, wed: 18, thu: 67, fri: 21, sat: 21, sun: 21 },
+        { time: '02:00 AM', mon: 45, tue: 30, wed: 77, thu: 66, fri: 20, sat: 34, sun: 21 },
+        { time: '04:00 AM', mon: 34, tue: 78, wed: 98, thu: 55, fri: 14, sat: 35, sun: 23 },
+        { time: '06:00 AM', mon: 23, tue: 34, wed: 67, thu: 100, fri: 18, sat: 56, sun: 23 },
+        { time: '08:00 AM', mon: 45, tue: 45, wed: 32, thu: 31, fri: 78, sat: 76, sun: 45 },
+        { time: '10:00 AM', mon: 55, tue: 96, wed: 45, thu: 34, fri: 53, sat: 35, sun: 52 },
+        { time: '12:00 PM', mon: 56, tue: 64, wed: 55, thu: 28, fri: 78, sat: 45, sun: 87 },
+        { time: '02:00 PM', mon: 78, tue: 50, wed: 49, thu: 64, fri: 40, sat: 49, sun: 56 },
+        { time: '04:00 PM', mon: 43, tue: 34, wed: 45, thu: 34, fri: 73, sat: 55, sun: 56 },
+        { time: '06:00 PM', mon: 87, tue: 34, wed: 33, thu: 39, fri: 22, sat: 46, sun: 44 },
+        { time: '08:00 PM', mon: 78, tue: 34, wed: 45, thu: 39, fri: 53, sat: 49, sun: 73 },
+        { time: '10:00 PM', mon: 44, tue: 34, wed: 49, thu: 49, fri: 77, sat: 57, sun: 76 }
+      ],
+      tripDurationData: [
+        { range: '0-5', count: 50 },
+        { range: '5-10', count: 120 },
+        { range: '10-15', count: 180 },
+        { range: '15-20', count: 250 },
+        { range: '20-25', count: 300 },
+        { range: '25-30', count: 280 },
+        { range: '30-35', count: 200 },
+        { range: '35-40', count: 150 },
+        { range: '40-45', count: 100 },
+        { range: '45+', count: 80 }
+      ],
+      performanceTimeSeries: [
+        { period: 'Jan 22', utilization: 68, percentile75: 60, percentile90: 50 },
+        { period: 'Feb 22', utilization: 72, percentile75: 65, percentile90: 55 },
+        { period: 'Mar 22', utilization: 75, percentile75: 70, percentile90: 60 },
+        { period: 'Apr 22', utilization: 74, percentile75: 70, percentile90: 65 },
+        { period: 'May 22', utilization: 78, percentile75: 75, percentile90: 70 },
+        { period: 'Jun 22', utilization: 74, percentile75: 70, percentile90: 65 }
+      ],
+      utilizationHistogram: [
+        { range: '0-10', count: 0 },
+        { range: '10-20', count: 5 },
+        { range: '20-30', count: 15 },
+        { range: '30-40', count: 25 },
+        { range: '40-50', count: 35 },
+        { range: '50-60', count: 45 },
+        { range: '60-70', count: 55 },
+        { range: '70-80', count: 65 },
+        { range: '80-90', count: 50 },
+        { range: '90-100', count: 35 }
+      ]
+    };
   }
 
   async getVehicles(filters?: FilterOptions): Promise<Vehicle[]> {

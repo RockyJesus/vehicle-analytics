@@ -1,7 +1,7 @@
-import { ExactFleetDashboard } from "@/components/ExactFleetDashboard";
+import { MobileFleetDashboard } from "@/components/MobileFleetDashboard";
 
 const Index = () => {
-  return <ExactFleetDashboard />;
+  return <MobileFleetDashboard />;
 };
 
 export default Index;
