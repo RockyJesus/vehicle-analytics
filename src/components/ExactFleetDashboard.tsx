@@ -7,41 +7,154 @@ import { HeatmapTable } from "./HeatmapTable";
 import { FleetHistogram } from "./FleetHistogram";
 import { VendorPerformanceTable } from "./VendorPerformanceTable";
 import { FleetMap } from "./FleetMap";
-import { 
-  getHeatmapData,
-  getFleetUtilizationData,
-  getOwnVehiclesData,
-  getVendorVehiclesData,
-  getPerformanceTimeSeriesData,
-  getTripDurationData,
-  getVendorPerformanceData,
-  getIdleTimeByVehicleData,
-  getVehicleUtilizationData,
-  getShiftUtilizationData,
-  getVehicleUtilizationHistogram,
-  getMaintenanceData,
-  getDispatchMetrics
-} from "@/lib/exact-mock-data";
+import { dataService, FilterOptions } from "@/lib/data-service";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState, useEffect } from "react";
 
 export const ExactFleetDashboard = () => {
-  const heatmapData = getHeatmapData();
-  const fleetUtilizationData = getFleetUtilizationData();
-  const ownVehiclesData = getOwnVehiclesData();
-  const vendorVehiclesData = getVendorVehiclesData();
-  const performanceData = getPerformanceTimeSeriesData();
-  const tripDurationData = getTripDurationData();
-  const vendorPerformanceData = getVendorPerformanceData();
-  const idleTimeData = getIdleTimeByVehicleData();
-  const vehicleUtilizationData = getVehicleUtilizationData();
-  const shiftUtilizationData = getShiftUtilizationData();
-  const utilizationHistogramData = getVehicleUtilizationHistogram();
-  const maintenanceData = getMaintenanceData();
-  const dispatchMetrics = getDispatchMetrics();
+  const [filters, setFilters] = useState<FilterOptions>({});
+  const [dashboardData, setDashboardData] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [filters]);
+
+  const loadDashboardData = async () => {
+    setLoading(true);
+    try {
+      const [
+        heatmapData,
+        fleetUtilizationData,
+        ownVehiclesData, 
+        vendorVehiclesData,
+        performanceData,
+        tripDurationData,
+        vendorPerformanceData,
+        idleTimeData,
+        vehicleUtilizationData,
+        shiftUtilizationData,
+        utilizationHistogramData,
+        maintenanceData,
+        dispatchMetrics,
+        fleetMetrics,
+        vehicles
+      ] = await Promise.all([
+        dataService.getHeatmapData(),
+        dataService.getUtilizationData(filters),
+        dataService.getOwnVehiclesData(filters),
+        dataService.getVendorVehiclesData(filters),
+        dataService.getPerformanceTimeSeriesData(),
+        dataService.getTripDurationData(),
+        dataService.getVendorPerformanceData(filters),
+        dataService.getIdleTimeByVehicleData(filters),
+        dataService.getVehicleUtilizationData(filters),
+        dataService.getShiftUtilizationData(filters),
+        dataService.getVehicleUtilizationHistogram(),
+        dataService.getMaintenanceData(filters),
+        dataService.getDispatchMetrics(filters),
+        dataService.getFleetMetrics(filters),
+        dataService.getVehicles(filters)
+      ]);
+
+      setDashboardData({
+        heatmapData,
+        fleetUtilizationData,
+        ownVehiclesData,
+        vendorVehiclesData,
+        performanceData,
+        tripDurationData,
+        vendorPerformanceData,
+        idleTimeData,
+        vehicleUtilizationData,
+        shiftUtilizationData,
+        utilizationHistogramData,
+        maintenanceData,
+        dispatchMetrics,
+        fleetMetrics,
+        vehicles
+      });
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateFilter = (key: keyof FilterOptions, value: string | undefined) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value === 'all' ? undefined : value
+    }));
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-lg">Loading dashboard data...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <FleetHeader />
+      
+      {/* Filter Controls */}
+      <div className="container max-w-7xl mx-auto px-6 py-4 border-b">
+        <div className="flex flex-wrap gap-4 items-center">
+          <div className="text-sm font-medium">Filters:</div>
+          
+          <Select onValueChange={(value) => updateFilter('vehicleType', value)}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Vehicle Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              {dataService.getVehicleTypes().map(type => (
+                <SelectItem key={type} value={type}>{type}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select onValueChange={(value) => updateFilter('status', value)}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              {dataService.getVehicleStatuses().map(status => (
+                <SelectItem key={status} value={status}>{status}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select onValueChange={(value) => updateFilter('vendor', value)}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Vendor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Vendors</SelectItem>
+              {dataService.getUniqueVendors().map(vendor => (
+                <SelectItem key={vendor} value={vendor}>{vendor}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select onValueChange={(value) => updateFilter('shift', value)}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Shift" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Shifts</SelectItem>
+              {dataService.getShifts().map(shift => (
+                <SelectItem key={shift} value={shift}>{shift}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       
       <div className="container max-w-7xl mx-auto px-6 py-6">
         <Tabs defaultValue="level1" className="space-y-6">
@@ -58,96 +171,96 @@ export const ExactFleetDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <MetricCard
                   title="Fleet Utilization (%)"
-                  value="74"
+                  value={dashboardData.fleetMetrics?.avgUtilization?.toString() || "0"}
                   unit="%"
                   prevValue="75"
                   showProgress={true}
-                  progressValue={74}
+                  progressValue={dashboardData.fleetMetrics?.avgUtilization || 0}
                 />
                 <MetricCard
                   title="Total Miles"
-                  value="50,670"
+                  value={dashboardData.fleetMetrics?.totalMiles?.toLocaleString() || "0"}
                   prevValue="45,800"
                   showProgress={true}
                   progressValue={85}
                 />
                 <MetricCard
-                  title="Trips per Vehicle Per Day"
-                  value="36"
+                  title="Active Vehicles"
+                  value={dashboardData.fleetMetrics?.activeVehicles?.toString() || "0"}
                   prevValue="44"
                   showProgress={true}
-                  progressValue={65}
+                  progressValue={dashboardData.fleetMetrics?.utilizationRate || 0}
                 />
                 <MetricCard
-                  title="Empty Miles per Vehicle (km/day)"
-                  value="5000"
-                  prevValue="5,300"
+                  title="Total Vehicles"
+                  value={dashboardData.fleetMetrics?.totalVehicles?.toString() || "0"}
+                  prevValue="100"
                   showProgress={true}
-                  progressValue={78}
+                  progressValue={100}
                 />
                 <MetricCard
-                  title="Avg. Occupancy (pax/trip)"
-                  value="1.50"
-                  prevValue="1.75"
+                  title="Avg. Fuel Level"
+                  value={dashboardData.fleetMetrics?.avgFuel?.toString() || "0"}
+                  unit="%"
+                  prevValue="75"
                   showProgress={true}
-                  progressValue={70}
+                  progressValue={dashboardData.fleetMetrics?.avgFuel || 0}
                 />
                 <MetricCard
-                  title="Vehicle Peak Demand Utilization %"
-                  value="90"
+                  title="Utilization Rate %"
+                  value={dashboardData.fleetMetrics?.utilizationRate?.toString() || "0"}
                   unit="%"
                   prevValue="95"
                   showProgress={true}
-                  progressValue={90}
+                  progressValue={dashboardData.fleetMetrics?.utilizationRate || 0}
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <MetricCard
-                  title="Idle Time (%)"
-                  value="26"
-                  unit="%"
+                  title="Idle Vehicles"
+                  value={dashboardData.fleetMetrics?.idleVehicles?.toString() || "0"}
                   prevValue="28"
                   showProgress={true}
-                  progressValue={26}
+                  progressValue={dashboardData.fleetMetrics?.idleVehicles || 0}
                 />
                 <MetricCard
                   title="Fleet Availability Rate (%)"
-                  value="75"
+                  value={dashboardData.fleetMetrics?.utilizationRate?.toString() || "0"}
                   unit="%"
                   prevValue="76"
                   showProgress={true}
-                  progressValue={75}
+                  progressValue={dashboardData.fleetMetrics?.utilizationRate || 0}
                 />
                 <MetricCard
-                  title="Maintenance Downtime per Vehicle (hrs/day)"
-                  value="75"
-                  unit="%"
-                  prevValue="76"
+                  title="Maintenance Vehicles"
+                  value={dashboardData.fleetMetrics?.maintenanceVehicles?.toString() || "0"}
+                  prevValue="10"
                   showProgress={true}
-                  progressValue={75}
+                  progressValue={dashboardData.fleetMetrics?.maintenanceVehicles || 0}
                 />
                 <MetricCard
-                  title="Avg Empty Miles per Trip"
-                  value="1.75"
-                  prevValue="1.9"
+                  title="Avg Vehicle Age"
+                  value={dashboardData.maintenanceData?.avgVehicleAge?.toString() || "0"}
+                  unit="years"
+                  prevValue="8"
                   showProgress={true}
                   progressValue={72}
                 />
                 <MetricCard
-                  title="Ride Requests per Vehicle"
-                  value="36"
+                  title="Vehicles Due Service"
+                  value={dashboardData.maintenanceData?.vehiclesDueForService?.toString() || "0"}
                   prevValue="44"
                   showProgress={true}
                   progressValue={68}
                 />
                 <MetricCard
-                  title="Under Utilized Vehicle %"
-                  value="15"
+                  title="Maintenance Compliance"
+                  value={dashboardData.maintenanceData?.scheduledMaintenanceCompliance?.toString() || "0"}
                   unit="%"
-                  prevValue="5"
+                  prevValue="95"
                   showProgress={true}
-                  progressValue={85}
+                  progressValue={dashboardData.maintenanceData?.scheduledMaintenanceCompliance || 0}
                 />
               </div>
             </div>
@@ -159,36 +272,36 @@ export const ExactFleetDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <MetricCard
                   title="Avg. Dispatch Assignment Time"
-                  value={dispatchMetrics.avgDispatchTime}
+                  value={dashboardData.dispatchMetrics?.avgDispatchTime || "0:00"}
                   unit="Sec"
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg. Rider Wait Time"
-                  value={dispatchMetrics.avgRiderWaitTime}
+                  value={dashboardData.dispatchMetrics?.avgRiderWaitTime || "0:00"}
                   unit="Min"
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg. Fleet Response Radius (km)"
-                  value={dispatchMetrics.fleetResponseRadius}
+                  value={dashboardData.dispatchMetrics?.fleetResponseRadius || "0"}
                   unit="KM"
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg. Available Vehicles per Request"
-                  value={dispatchMetrics.availableVehiclesPerRequest}
+                  value={dashboardData.dispatchMetrics?.availableVehiclesPerRequest || "0"}
                   variant="compact"
                 />
                 <MetricCard
                   title="First-Time Assignment (%)"
-                  value={dispatchMetrics.firstTimeAssignment}
+                  value={dashboardData.dispatchMetrics?.firstTimeAssignment || 0}
                   unit="%"
                   variant="compact"
                 />
                 <MetricCard
                   title="Trip Fulfillment (%)"
-                  value={dispatchMetrics.tripFulfillment}
+                  value={dashboardData.dispatchMetrics?.tripFulfillment || 0}
                   unit="%"
                   variant="compact"
                 />
@@ -197,35 +310,35 @@ export const ExactFleetDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <MetricCard
                   title="On Time Pickup %"
-                  value={dispatchMetrics.onTimePickup}
+                  value={dashboardData.dispatchMetrics?.onTimePickup || 0}
                   unit="%"
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg Vehicles Available per Request"
-                  value={dispatchMetrics.avgVehiclesAvailablePerRequest}
+                  value={dashboardData.dispatchMetrics?.avgVehiclesAvailablePerRequest || "0"}
                   variant="compact"
                 />
                 <MetricCard
                   title="Dispatch Coverage (%)"
-                  value={dispatchMetrics.dispatchCoverage}
+                  value={dashboardData.dispatchMetrics?.dispatchCoverage || 0}
                   unit="%"
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg. Ride NPS"
-                  value={dispatchMetrics.avgRideNPS}
+                  value={dashboardData.dispatchMetrics?.avgRideNPS || 0}
                   variant="compact"
                 />
                 <MetricCard
                   title="Driver Decline %"
-                  value={dispatchMetrics.driverDecline}
+                  value={dashboardData.dispatchMetrics?.driverDecline || 0}
                   unit="%"
                   variant="compact"
                 />
                 <MetricCard
                   title="Rider Cancellation %"
-                  value={dispatchMetrics.riderCancellation}
+                  value={dashboardData.dispatchMetrics?.riderCancellation || 0}
                   unit="%"
                   variant="compact"
                 />
@@ -239,40 +352,40 @@ export const ExactFleetDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
                 <MetricCard
                   title="Avg. Vehicle Downtime (hrs/day)"
-                  value={maintenanceData.avgVehicleDowntime}
+                  value={dashboardData.maintenanceData?.avgVehicleDowntime || "0:00"}
                   unit="Min"
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg. Repair Time per Vehicle (hrs)"
-                  value={maintenanceData.avgRepairTime}
+                  value={dashboardData.maintenanceData?.avgRepairTime || "0:00"}
                   unit="Min"
                   variant="compact"
                 />
                 <MetricCard
                   title="Unplanned Breakdowns"
-                  value={maintenanceData.unplannedBreakdowns}
+                  value={dashboardData.maintenanceData?.unplannedBreakdowns || 0}
                   variant="compact"
                 />
                 <MetricCard
                   title="Overdue Service Vehicles (count)"
-                  value={maintenanceData.overdueServiceVehicles}
+                  value={dashboardData.maintenanceData?.overdueServiceVehicles || 0}
                   variant="compact"
                 />
                 <MetricCard
                   title="Scheduled Maintenance Compliance (%)"
-                  value={maintenanceData.scheduledMaintenanceCompliance}
+                  value={dashboardData.maintenanceData?.scheduledMaintenanceCompliance || 0}
                   unit="%"
                   variant="compact"
                 />
                 <MetricCard
                   title="Vehicles Due for Service (in 30 days)"
-                  value={maintenanceData.vehiclesDueForService}
+                  value={dashboardData.maintenanceData?.vehiclesDueForService || 0}
                   variant="compact"
                 />
                 <MetricCard
                   title="Avg. Vehicle Age (Years)"
-                  value={maintenanceData.avgVehicleAge}
+                  value={dashboardData.maintenanceData?.avgVehicleAge || 0}
                   variant="compact"
                 />
               </div>
@@ -286,16 +399,16 @@ export const ExactFleetDashboard = () => {
               <div className="lg:col-span-1">
                 <UtilizationChart
                   title="Own Vehicles - Utilization"
-                  data={ownVehiclesData}
-                  centerValue="90%"
+                  data={dashboardData.ownVehiclesData || []}
+                  centerValue={`${dashboardData.ownVehiclesData?.[0]?.value || 0}%`}
                   centerLabel="Target: 82%"
                 />
               </div>
               <div className="lg:col-span-1">
                 <UtilizationChart
                   title="Vendor Vehicles - Utilization"
-                  data={vendorVehiclesData}
-                  centerValue="65%"
+                  data={dashboardData.vendorVehiclesData || []}
+                  centerValue={`${dashboardData.vendorVehiclesData?.[0]?.value || 0}%`}
                   centerLabel="Target: 68%"
                 />
               </div>
@@ -303,16 +416,15 @@ export const ExactFleetDashboard = () => {
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <MetricCard
                     title="Average Utilization %"
-                    value="74"
+                    value={dashboardData.fleetMetrics?.avgUtilization?.toString() || "0"}
                     unit="%"
                     prevValue="78"
                     variant="compact"
                   />
                   <MetricCard
-                    title="Utilization % Below Average"
-                    value="45.5"
-                    unit="%"
-                    prevValue="74"
+                    title="Total Vehicles Filtered"
+                    value={dashboardData.fleetMetrics?.totalVehicles?.toString() || "0"}
+                    prevValue="100"
                     variant="compact"
                   />
                 </div>
@@ -356,7 +468,7 @@ export const ExactFleetDashboard = () => {
               <div className="lg:col-span-2">
                 <PerformanceChart
                   title="Fleet Utilization % by Date"
-                  data={performanceData}
+                  data={dashboardData.performanceData || []}
                   lines={[
                     { dataKey: 'utilization', name: 'Average Utilization %', color: 'hsl(var(--chart-4))' },
                     { dataKey: 'percentile75', name: '75th Percentile', color: 'hsl(var(--chart-3))' },
@@ -368,7 +480,7 @@ export const ExactFleetDashboard = () => {
               <div className="lg:col-span-1">
                 <HeatmapTable
                   title="Fleet Utilization % By Day & Time"
-                  data={heatmapData}
+                  data={dashboardData.heatmapData || []}
                 />
               </div>
             </div>
@@ -378,7 +490,7 @@ export const ExactFleetDashboard = () => {
               <div className="space-y-4">
                 <BarChart
                   title="Utilization by Vehicle Class"
-                  data={vehicleUtilizationData}
+                  data={dashboardData.vehicleUtilizationData || []}
                   dataKey="utilization"
                   nameKey="name"
                   color="hsl(var(--chart-4))"
@@ -386,7 +498,7 @@ export const ExactFleetDashboard = () => {
                 />
                 <BarChart
                   title="Utilization by Shift"
-                  data={shiftUtilizationData}
+                  data={dashboardData.shiftUtilizationData || []}
                   dataKey="utilization"
                   nameKey="name"
                   color="hsl(var(--chart-1))"
@@ -397,13 +509,13 @@ export const ExactFleetDashboard = () => {
               <div>
                 <FleetHistogram
                   title="Trip Duration Distribution (Minutes)"
-                  data={tripDurationData}
+                  data={dashboardData.tripDurationData || []}
                   height={200}
                 />
                 <div className="mt-4">
                   <FleetHistogram
                     title="Histogram Of Vehicle Utilization %"
-                    data={utilizationHistogramData}
+                    data={dashboardData.utilizationHistogramData || []}
                     height={180}
                   />
                 </div>
@@ -412,12 +524,12 @@ export const ExactFleetDashboard = () => {
               <div className="lg:col-span-2 grid grid-cols-2 gap-4">
                 <VendorPerformanceTable
                   title="Top Performers"
-                  data={vendorPerformanceData}
+                  data={dashboardData.vendorPerformanceData || []}
                   isTopPerformers={true}
                 />
                 <VendorPerformanceTable
                   title="Idle Time by Vehicle"
-                  data={idleTimeData.slice(0, 10).map(item => ({
+                  data={(dashboardData.idleTimeData || []).slice(0, 10).map((item: any) => ({
                     vendor: item.vehicle,
                     utilization: item.idleTime
                   }))}
@@ -431,25 +543,25 @@ export const ExactFleetDashboard = () => {
               <div className="lg:col-span-2">
                 <FleetMap 
                   title="GPS Fleet Tracking - Real-time Vehicle Locations"
-                  vehicles={[
-                    { id: 'VH001', lat: 28.6139, lng: 77.2090, status: 'active' },
-                    { id: 'VH002', lat: 28.6129, lng: 77.2095, status: 'active' },
-                    { id: 'VH003', lat: 28.6149, lng: 77.2085, status: 'idle' },
-                    { id: 'VH004', lat: 28.6159, lng: 77.2080, status: 'maintenance' },
-                  ]}
+                  vehicles={(dashboardData.vehicles || []).slice(0, 20).map((vehicle: any) => ({
+                    id: vehicle.id,
+                    lat: vehicle.location.lat,
+                    lng: vehicle.location.lng,
+                    status: vehicle.status
+                  }))}
                 />
               </div>
               <div className="lg:col-span-1">
                 <MetricCard
                   title="Trip Pooling %"
-                  value={dispatchMetrics.tripPooling}
+                  value={dashboardData.dispatchMetrics?.tripPooling || 0}
                   unit="%"
                   variant="compact"
                 />
                 <div className="mt-4">
                   <MetricCard
                     title="Avg. Distance to Nearest Vehicle (km)"
-                    value={dispatchMetrics.avgDistanceToNearestVehicle}
+                    value={dashboardData.dispatchMetrics?.avgDistanceToNearestVehicle || 0}
                     variant="compact"
                   />
                 </div>
