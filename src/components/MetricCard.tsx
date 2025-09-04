@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 
 interface MetricCardProps {
   title: string;
@@ -23,40 +22,48 @@ export const MetricCard = ({
   variant = 'default'
 }: MetricCardProps) => {
   return (
-    <Card className="h-full">
+    <Card className="h-full border border-gray-200">
       <CardContent className={variant === 'compact' ? "p-3" : "p-4"}>
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-muted-foreground leading-tight">
+          <h3 className="text-xs font-medium text-gray-600 leading-tight">
             {title}
           </h3>
-          <div className="flex items-baseline justify-between">
-            <div className="flex items-baseline space-x-1">
-              <span className={`font-bold text-foreground ${variant === 'compact' ? 'text-xl' : 'text-2xl'}`}>
-                {value}
+          <div className="flex items-baseline space-x-1">
+            <span className={`font-bold text-gray-900 ${variant === 'compact' ? 'text-lg' : 'text-xl'}`}>
+              {value}
+            </span>
+            {unit && unit !== 'undefined' && (
+              <span className="text-xs text-gray-600 font-medium">
+                {unit}
               </span>
-              {unit && (
-                <span className="text-sm text-muted-foreground font-medium">
-                  {unit}
-                </span>
-              )}
-            </div>
+            )}
           </div>
           
           {prevValue && (
-            <div className="text-xs text-muted-foreground">
-              {prevLabel} {prevValue} {unit}
+            <div className="text-xs text-gray-500">
+              {prevLabel} {prevValue} {unit && unit !== 'undefined' ? unit : ''}
             </div>
           )}
           
           {showProgress && progressValue !== undefined && (
             <div className="space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-success">Current</span>
-                <span className="text-chart-2">Previous</span>
+                <span className="text-green-600">Current</span>
+                <span className="text-green-400">Previous</span>
               </div>
-              <div className="relative">
-                <Progress value={progressValue} className="h-2" />
-                <div className="absolute top-0 left-0 w-full h-2 bg-chart-2/30 rounded-full -z-10"></div>
+              <div className="space-y-1">
+                <div className="h-2 bg-gray-200 rounded-full">
+                  <div 
+                    className="h-2 bg-green-500 rounded-full" 
+                    style={{ width: `${Math.min(progressValue, 100)}%` }}
+                  ></div>
+                </div>
+                <div className="h-2 bg-gray-200 rounded-full">
+                  <div 
+                    className="h-2 bg-green-400 rounded-full" 
+                    style={{ width: `${Math.min((progressValue || 0) - 5, 100)}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
           )}
