@@ -1,7 +1,7 @@
-import { ResponsiveFleetDashboard } from "@/components/ResponsiveFleetDashboard";
+import ExactDashboardReplica from "@/components/ExactDashboardReplica";
 
 const Index = () => {
-  return <ResponsiveFleetDashboard />;
+  return <ExactDashboardReplica />;
 };
 
 export default Index;
