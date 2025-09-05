@@ -57,19 +57,19 @@ export const ExactFleetDashboard = () => {
         <div className="space-y-4">
           <h2 className="text-sm font-semibold text-blue-800 bg-blue-50 px-3 py-2 border-l-4 border-blue-500">Fleet Utilization Efficiency</h2>
           
-          <div className="grid grid-cols-6 gap-3">
+          <div className="grid grid-cols-6 gap-4">
             <MetricCard
               title="Fleet Utilization (%)"
               value="74"
               unit="%"
-              prevValue="75"
+              prevValue="75 %"
               showProgress={true}
               progressValue={74}
             />
             <MetricCard
               title="Total Miles"
               value="50,670"
-              prevValue="45,800 (+10%)"
+              prevValue="45,800 (+10% ▼)"
               showProgress={true}
               progressValue={85}
             />
@@ -83,7 +83,7 @@ export const ExactFleetDashboard = () => {
             <MetricCard
               title="Empty Miles per Vehicle (km/day)"
               value="5000"
-              prevValue="5,500 (+10%)"
+              prevValue="5,500 (+10% ▼)"
               showProgress={true}
               progressValue={90}
             />
@@ -98,18 +98,18 @@ export const ExactFleetDashboard = () => {
               title="Vehicle Peak Demand Utilization %"
               value="90"
               unit="%"
-              prevValue="95"
+              prevValue="95 %"
               showProgress={true}
               progressValue={90}
             />
           </div>
 
-          <div className="grid grid-cols-6 gap-3">
+          <div className="grid grid-cols-6 gap-4">
             <MetricCard
               title="Idle Time (%)"
               value="26"
               unit="%"
-              prevValue="28"
+              prevValue="28 %"
               showProgress={true}
               progressValue={26}
             />
@@ -117,7 +117,7 @@ export const ExactFleetDashboard = () => {
               title="Fleet Availability Rate (%)"
               value="75"
               unit="%"
-              prevValue="76"
+              prevValue="26 %"
               showProgress={true}
               progressValue={75}
             />
@@ -125,7 +125,7 @@ export const ExactFleetDashboard = () => {
               title="Maintenance Downtime per Vehicle (hrs/day)"
               value="75"
               unit="%"
-              prevValue="26"
+              prevValue="26 %"
               showProgress={true}
               progressValue={75}
             />
@@ -147,7 +147,7 @@ export const ExactFleetDashboard = () => {
               title="Under Utilized Vehicle %"
               value="15"
               unit="%"
-              prevValue="5"
+              prevValue="5 %"
               showProgress={true}
               progressValue={15}
             />
@@ -158,31 +158,31 @@ export const ExactFleetDashboard = () => {
         <div className="space-y-4 border-t-4 border-blue-500 pt-4">
           <h2 className="text-sm font-semibold text-blue-800 bg-blue-50 px-3 py-2 border-l-4 border-blue-500">Dispatch & Routing Efficiency</h2>
           
-          <div className="grid grid-cols-4 gap-3">
-            <div className="bg-green-100 p-4 rounded-lg border border-green-200">
+          <div className="grid grid-cols-4 gap-4">
+            <div className="bg-green-100 p-4 rounded border border-green-200">
               <div className="text-xs text-green-700 mb-1">Avg. Dispatch Assignment Time</div>
               <div className="text-2xl font-bold text-green-800">00:30 <span className="text-xs font-normal">Sec</span></div>
             </div>
-            <div className="bg-green-100 p-4 rounded-lg border border-green-200">
+            <div className="bg-green-100 p-4 rounded border border-green-200">
               <div className="text-xs text-green-700 mb-1">Avg. Rider Wait Time</div>
               <div className="text-2xl font-bold text-green-800">02:30 <span className="text-xs font-normal">Min</span></div>
             </div>
-            <div className="bg-green-100 p-4 rounded-lg border border-green-200">
+            <div className="bg-green-100 p-4 rounded border border-green-200">
               <div className="text-xs text-green-700 mb-1">Avg. Fleet Response Radius (km)</div>
               <div className="text-2xl font-bold text-green-800">1.5 <span className="text-xs font-normal">KM</span></div>
             </div>
-            <div className="bg-green-100 p-4 rounded-lg border border-green-200">
+            <div className="bg-green-100 p-4 rounded border border-green-200">
               <div className="text-xs text-green-700 mb-1">Avg. Available Vehicles per Request</div>
               <div className="text-2xl font-bold text-green-800">1.75</div>
             </div>
           </div>
 
-          <div className="grid grid-cols-6 gap-3">
+          <div className="grid grid-cols-6 gap-4">
             <MetricCard
               title="First-Time Assignment (%)"
               value="90"
               unit="%"
-              prevValue="95"
+              prevValue="95 %"
               showProgress={true}
               progressValue={90}
             />
@@ -190,7 +190,7 @@ export const ExactFleetDashboard = () => {
               title="Trip Fulfillment (%)"
               value="95"
               unit="%"
-              prevValue="90"
+              prevValue="90 %"
               showProgress={true}
               progressValue={95}
             />
@@ -205,7 +205,7 @@ export const ExactFleetDashboard = () => {
               title="On Time Pickup %"
               value="90"
               unit="%"
-              prevValue="95"
+              prevValue="95 %"
               showProgress={true}
               progressValue={90}
             />
@@ -220,13 +220,13 @@ export const ExactFleetDashboard = () => {
               title="Dispatch Coverage (%)"
               value="95"
               unit="%"
-              prevValue="90"
+              prevValue="90 %"
               showProgress={true}
               progressValue={95}
             />
           </div>
 
-          <div className="grid grid-cols-6 gap-3">
+          <div className="grid grid-cols-6 gap-4">
             <MetricCard
               title="Avg. Ride NPS"
               value="4.25"
@@ -238,7 +238,7 @@ export const ExactFleetDashboard = () => {
               title="Driver Decline %"
               value="13"
               unit="%"
-              prevValue="5"
+              prevValue="5 %"
               showProgress={true}
               progressValue={25}
             />
@@ -246,7 +246,7 @@ export const ExactFleetDashboard = () => {
               title="Rider Cancellation %"
               value="10"
               unit="%"
-              prevValue="12"
+              prevValue="12 %"
               showProgress={true}
               progressValue={20}
             />
@@ -254,7 +254,7 @@ export const ExactFleetDashboard = () => {
               title="Trip Pooling %"
               value="23"
               unit="%"
-              prevValue="26"
+              prevValue="26 %"
               showProgress={true}
               progressValue={23}
             />
@@ -267,19 +267,19 @@ export const ExactFleetDashboard = () => {
         <div className="space-y-4 border-t-4 border-blue-500 pt-4">
           <h2 className="text-sm font-semibold text-blue-800 bg-blue-50 px-3 py-2 border-l-4 border-blue-500">Vehicle Health & Efficiency</h2>
           
-          <div className="grid grid-cols-7 gap-3">
-            <div className="bg-yellow-100 p-4 rounded-lg border border-yellow-200">
+          <div className="grid grid-cols-7 gap-4">
+            <div className="bg-yellow-100 p-4 rounded border border-yellow-200">
               <div className="text-xs text-yellow-700 mb-1">Avg. Vehicle Downtime (hrs/day)</div>
               <div className="text-2xl font-bold text-yellow-800">02:30 <span className="text-xs font-normal">Min</span></div>
             </div>
-            <div className="bg-yellow-100 p-4 rounded-lg border border-yellow-200">
+            <div className="bg-yellow-100 p-4 rounded border border-yellow-200">
               <div className="text-xs text-yellow-700 mb-1">Avg. Repair Time per Vehicle (hrs)</div>
               <div className="text-2xl font-bold text-yellow-800">02:30 <span className="text-xs font-normal">Min</span></div>
             </div>
             <MetricCard
               title="Unplanned Breakdowns"
               value="13"
-              prevValue="4"
+              prevValue="4.5"
               showProgress={true}
               progressValue={30}
             />
@@ -293,7 +293,7 @@ export const ExactFleetDashboard = () => {
               title="Scheduled Maintenance Compliance (%)"
               value="90"
               unit="%"
-              prevValue="95"
+              prevValue="95 %"
               showProgress={true}
               progressValue={90}
             />
