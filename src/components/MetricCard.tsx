@@ -22,7 +22,7 @@ export const MetricCard = ({
   variant = 'default'
 }: MetricCardProps) => {
   return (
-    <Card className="h-full border border-gray-200">
+    <Card className="h-full border border-gray-200 bg-white">
       <CardContent className={variant === 'compact' ? "p-3" : "p-4"}>
         <div className="space-y-2">
           <h3 className="text-xs font-medium text-gray-600 leading-tight">
@@ -41,27 +41,27 @@ export const MetricCard = ({
           
           {prevValue && (
             <div className="text-xs text-gray-500">
-              {prevLabel} {prevValue} {unit && unit !== 'undefined' ? unit : ''}
+              {prevLabel} {prevValue}
             </div>
           )}
           
           {showProgress && progressValue !== undefined && (
             <div className="space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-green-600">Current</span>
-                <span className="text-green-400">Previous</span>
+                <span className="text-blue-600">Current</span>
+                <span className="text-green-500">Previous</span>
               </div>
               <div className="space-y-1">
-                <div className="h-2 bg-gray-200 rounded-full">
+                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div 
-                    className="h-2 bg-green-500 rounded-full" 
-                    style={{ width: `${Math.min(progressValue, 100)}%` }}
+                    className="h-full bg-blue-500 rounded-full transition-all duration-300" 
+                    style={{ width: `${Math.min(Math.max(progressValue, 0), 100)}%` }}
                   ></div>
                 </div>
-                <div className="h-2 bg-gray-200 rounded-full">
+                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div 
-                    className="h-2 bg-green-400 rounded-full" 
-                    style={{ width: `${Math.min((progressValue || 0) - 5, 100)}%` }}
+                    className="h-full bg-green-500 rounded-full transition-all duration-300" 
+                    style={{ width: `${Math.min(Math.max((progressValue || 0) + 5, 0), 100)}%` }}
                   ></div>
                 </div>
               </div>
