@@ -1,7 +1,7 @@
-import ExactDashboardReplica from "@/components/ExactDashboardReplica";
+import GaugeDashboard from "@/components/GaugeDashboard";
 
 const Index = () => {
-  return <ExactDashboardReplica />;
+  return <GaugeDashboard />;
 };
 
 export default Index;
