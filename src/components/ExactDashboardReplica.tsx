@@ -229,8 +229,7 @@ const ExactDashboardReplica: React.FC = () => {
 
         {/* Fleet Utilization Efficiency */}
         <div className="mb-6">
-          <div className="bg-blue-100 border-l-4 border-blue-500 px-3 py-2 mb-3 cursor-pointer hover:bg-blue-200 transition-colors"
-               onClick={() => window.location.href = '/utilization-detail'}>
+          <div className="bg-blue-100 border-l-4 border-blue-500 px-3 py-2 mb-3">
             <h2 className="text-sm font-semibold text-blue-800">Fleet Utilization Efficiency</h2>
           </div>
           <div className="grid grid-cols-6 gap-3">
