@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface MetricCardProps {
   title: string;
@@ -64,6 +65,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
 };
 
 const ExactDashboardReplica: React.FC = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     period: 'All',
     vehicleClass: 'All',
@@ -229,7 +231,10 @@ const ExactDashboardReplica: React.FC = () => {
 
         {/* Fleet Utilization Efficiency */}
         <div className="mb-6">
-          <div className="bg-blue-100 border-l-4 border-blue-500 px-3 py-2 mb-3">
+          <div 
+            className="bg-blue-100 border-l-4 border-blue-500 px-3 py-2 mb-3 cursor-pointer hover:bg-blue-200 transition-colors"
+            onClick={() => navigate('/fleet-efficiency')}
+          >
             <h2 className="text-sm font-semibold text-blue-800">Fleet Utilization Efficiency</h2>
           </div>
           <div className="grid grid-cols-6 gap-3">
